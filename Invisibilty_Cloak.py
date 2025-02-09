@@ -1,8 +1,12 @@
+#Code for Harry Potter's Invisibility Cloak
+
+#importing the libraries
 import cv2
 import numpy as np
 import time
 import sys
 
+#Function to capture the background
 def create_background(cap, num_frames=30):
     print("Capturing background. Please move out of frame.")
     backgrounds = []
@@ -24,6 +28,7 @@ def create_background(cap, num_frames=30):
     else:
         raise ValueError("Could not capture any frames for background")
 
+#Creating the mask
 def create_mask(frame, lower_color, upper_color):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv, lower_color, upper_color)
@@ -31,6 +36,7 @@ def create_mask(frame, lower_color, upper_color):
     mask = cv2.morphologyEx(mask, cv2.MORPH_DILATE, np.ones((3, 3), np.uint8), iterations=1)
     return mask
 
+#Applyign the mask to the Foreground
 def apply_cloak_effect(frame, mask, background):
     mask_inv = cv2.bitwise_not(mask)
     fg = cv2.bitwise_and(frame, frame, mask=mask_inv)
